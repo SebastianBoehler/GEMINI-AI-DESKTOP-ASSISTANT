@@ -9,10 +9,13 @@ import {
   Tool,
   Content,
 } from "@google-cloud/vertexai";
+import fs from "fs";
+import dotenv from "dotenv";
+dotenv.config();
 
 // Initialize Vertex with your Cloud project and location
 const vertex_ai = new VertexAI({
-  project: "ambient-hulling-423419-q7",
+  project: process.env.GOOGLE_PROJECT_ID || "",
   location: "us-central1",
 });
 
@@ -63,8 +66,10 @@ const getWeather: FunctionDeclaration = {
 
 const fetchTool: FunctionDeclaration = {
   name: "fetch",
-  description:
-    "Fetch data from a given URL. To load any website, use this tool. please load direct files like *.html. load from public sites. only in a row. Returns the fetched website as text",
+  description: `
+    Fetch data from a given URL. To load any website, use this tool. please load direct files like *.html. load from public sites. only in a row. Returns the fetched website as text.
+    Needs the url as full string with protocol and params like https://www.google.com/search?q=hello
+    `,
   parameters: {
     type: FunctionDeclarationSchemaType.OBJECT,
     properties: {
@@ -86,12 +91,21 @@ const googleRetrival: RetrievalTool = {
   },
 };
 
-const input: string = "`what does hb-capital.app do? find out for`";
+const input: string =
+  "load the site hb-capital.app for em and tell me what the company does";
 
-const contents = [
+const imageData = fs.readFileSync("image.jpg", "base64");
+
+const contents: Content[] = [
   {
     role: "user",
     parts: [
+      // {
+      //   inlineData: {
+      //     mimeType: "image/jpeg",
+      //     data: imageData,
+      //   },
+      // },
       {
         text: input,
       },

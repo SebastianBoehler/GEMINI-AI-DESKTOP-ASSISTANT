@@ -2,9 +2,12 @@ import base64
 import vertexai
 from vertexai.generative_models import GenerativeModel
 from vertexai.preview.generative_models import Part, FinishReason
+import os
+
+projectId = os.getenv('PROJECT_ID')
 
 def generate():
-    vertexai.init(project="ambient-hulling-423419-q7", location="us-central1")
+    vertexai.init(project=projectId, location="us-central1")
     model = GenerativeModel("gemini-1.5-flash-preview-0514")
 
     user_prompt = "Please provide a detailed summary of the current state of artificial intelligence."
